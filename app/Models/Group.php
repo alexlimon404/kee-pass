@@ -39,6 +39,11 @@ class Group extends Model
         return $this->belongsTo(Group::class, 'parent_id');
     }
 
+    public function children(): HasMany
+    {
+        return $this->hasMany(Group::class, 'parent_id');
+    }
+
     public function notes(): HasMany
     {
         return $this->hasMany(Note::class);

@@ -6,6 +6,7 @@ use App\Actions\Action;
 use App\Models\File;
 use App\Models\Group;
 use App\Models\Note;
+use Illuminate\Support\Facades\Storage;
 
 class ImportCSVAction extends Action
 {
@@ -30,21 +31,26 @@ class ImportCSVAction extends Action
 
             fclose($handle);
         }
+        if (Storage::exists($path)) {
+            Storage::delete($path);
+
+        }
     }
 
     private function save(array $records): void
     {
         foreach ($records as $record) {
-            Note::create([
+            Note::firstOrCreate([
                 'group_id' => $this->createGroup($record['Group'])->id,
                 'user_id' => $this->file->user_id,
-                'file_id' => $this->file->id,
                 'title' => $record['Title'],
                 'username' => $record['Username'],
                 'password' => $record['Password'],
                 'url' => $record['URL'],
                 'description' => $record['Notes'],
+            ], [
                 'last_edit_at' => $record['Last Modified'],
+                'file_id' => $this->file->id,
                 'created_at_from_export' => $record['Created'],
             ]);
         }
@@ -56,7 +62,6 @@ class ImportCSVAction extends Action
 
         $ids = null;
         foreach ($groups as $group_name) {
-
             $group = Group::firstOrCreate([
                 'name' => $group_name,
                 'parent_id' => $ids ? end($ids) : null,

@@ -42,6 +42,7 @@ class GroupResource extends BaseResource
     public static function getRelations(): array
     {
         return [
+            RelationManagers\ChildrenRelationManager::make(),
             RelationManagers\NotesRelationManager::make(),
         ];
     }
@@ -87,9 +88,9 @@ class GroupResource extends BaseResource
                 ->toggleable(isToggledHiddenByDefault: true)
                 ->formatStateUsing(fn (Carbon $state, Group $record) => __date($state)),
             Tables\Columns\TextColumn::make('breadcrumb')
-                ->searchable(isIndividual: true),
+                ->searchable(),
             Tables\Columns\TextColumn::make('name')
-                ->searchable(isIndividual: true),
+                ->searchable(),
             Tables\Columns\TextColumn::make('parent.name')
                 ->color('primary')
                 ->toggleable(isToggledHiddenByDefault: true)
