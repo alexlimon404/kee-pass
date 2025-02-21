@@ -30,12 +30,7 @@ class NoteResource extends BaseResource
     public static function table(Table $table): Table
     {
         return $table->columns(static::getTableColumns($table))
-            ->actions([static::v(), static::e()])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+            ->actions([static::v(), static::e()]);
     }
 
     public static function infolist(Infolist $infolist): Infolist
@@ -101,8 +96,13 @@ class NoteResource extends BaseResource
                 ->sortable(),
             Tables\Columns\TextColumn::make('created_at')
                 ->formatStateUsing(fn (Carbon $state, Note $record) => __date($state)),
+            Tables\Columns\TextColumn::make('group.name')
+                ->color('primary')
+                ->url(fn (Note $record) => $record->group_id ? GroupResource::getUrl('view', [$record->group_id]) : null),
             Tables\Columns\TextColumn::make('title'),
             Tables\Columns\TextColumn::make('username'),
+            Tables\Columns\TextColumn::make('url')
+                ->searchable(),
             Tables\Columns\TextColumn::make('search')
                 ->searchable()
                 ->limit(1),

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Traits\BelongsToUser;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
 
 /**
  * @property int id
@@ -37,6 +37,11 @@ class Group extends Model
     public function parent(): BelongsTo
     {
         return $this->belongsTo(Group::class, 'parent_id');
+    }
+
+    public function notes(): HasMany
+    {
+        return $this->hasMany(Note::class);
     }
 
     public function fillBreadcrumb(): void

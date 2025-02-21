@@ -42,6 +42,7 @@ class GroupResource extends BaseResource
     public static function getRelations(): array
     {
         return [
+            RelationManagers\NotesRelationManager::make(),
         ];
     }
 
@@ -83,13 +84,16 @@ class GroupResource extends BaseResource
             Tables\Columns\TextColumn::make('id')
                 ->sortable(),
             Tables\Columns\TextColumn::make('created_at')
+                ->toggleable(isToggledHiddenByDefault: true)
                 ->formatStateUsing(fn (Carbon $state, Group $record) => __date($state)),
-
+            Tables\Columns\TextColumn::make('breadcrumb')
+                ->searchable(isIndividual: true),
+            Tables\Columns\TextColumn::make('name')
+                ->searchable(isIndividual: true),
             Tables\Columns\TextColumn::make('parent.name')
                 ->color('primary')
+                ->toggleable(isToggledHiddenByDefault: true)
                 ->url(fn (Group $record) => $record->group_id ? GroupResource::getUrl('view', [$record->group_id]) : null),
-            Tables\Columns\TextColumn::make('name'),
-            Tables\Columns\TextColumn::make('breadcrumb'),
         ];
     }
 
