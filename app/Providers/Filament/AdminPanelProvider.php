@@ -24,7 +24,7 @@ class AdminPanelProvider extends PanelProvider
     public function boot(): void
     {
         Table::configureUsing(static function (Table $table): void {
-            $table->defaultPaginationPageOption(15);
+            $table->defaultPaginationPageOption(10);
             $table->defaultSort('id', 'desc');
         });
     }
