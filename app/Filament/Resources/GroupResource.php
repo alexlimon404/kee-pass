@@ -69,12 +69,11 @@ class GroupResource extends BaseResource
                         ->default(auth()->user()->getAuthIdentifier()),
                     Forms\Components\Select::make('parent_id')
                         ->relationship('parent', 'name')
-                        ->required(),
+                        ->nullable(),
                     Forms\Components\TextInput::make('name')
                         ->required(),
                     Forms\Components\TextInput::make('breadcrumb')
                         ->nullable()->readOnly(),
-
                 ]),
         ];
     }
@@ -94,7 +93,9 @@ class GroupResource extends BaseResource
             Tables\Columns\TextColumn::make('parent.name')
                 ->color('primary')
                 ->toggleable(isToggledHiddenByDefault: true)
-                ->url(fn (Group $record) => $record->group_id ? GroupResource::getUrl('view', [$record->group_id]) : null),
+                ->url(fn (Group $record) => $record->parent_id ? GroupResource::getUrl('view', [$record->parent_id]) : null),
+            Tables\Columns\TextColumn::make('children_count')
+                ->sortable(),
         ];
     }
 
@@ -115,6 +116,7 @@ class GroupResource extends BaseResource
                         ->url(fn (Group $record) => $record->parent_id ? GroupResource::getUrl('view', [$record->parent_id]) : null),
                     Infolists\Components\TextEntry::make('name'),
                     Infolists\Components\TextEntry::make('breadcrumb'),
+                    Infolists\Components\TextEntry::make('children_count'),
                 ]),
         ];
     }

@@ -56,7 +56,9 @@ class NoteResource extends BaseResource
                 ->columns(1)
                 ->schema([
                     Forms\Components\Select::make('group_id')
-                        ->relationship('group', 'name')
+                        ->relationship('group', 'breadcrumb')
+                        ->preload()
+                        ->searchable()
                         ->required(),
                     Forms\Components\TextInput::make('file_id')
                         ->nullable(),
@@ -72,11 +74,11 @@ class NoteResource extends BaseResource
                     Forms\Components\TextInput::make('title')
                         ->required(),
                     Forms\Components\TextInput::make('username')
-                        ->required(),
+                        ->nullable(),
                     Forms\Components\TextInput::make('password')
-                        ->required(),
+                        ->nullable(),
                     Forms\Components\TextInput::make('url')
-                        ->required(),
+                        ->nullable(),
                 ]),
             Forms\Components\Section::make()
                 ->columnSpan(2)
@@ -84,7 +86,7 @@ class NoteResource extends BaseResource
                 ->schema([
                     Forms\Components\Textarea::make('description')
                         ->autosize()
-                        ->required(),
+                        ->nullable(),
                 ]),
         ];
     }
@@ -123,7 +125,7 @@ class NoteResource extends BaseResource
                         ->url(fn (Note $record) => $record->group_id ? GroupResource::getUrl('view', [$record->group_id]) : null),
                     Infolists\Components\TextEntry::make('file.name')
                         ->color('warning')
-                        ->url(fn (Note $record) => FileResource::getUrl('view', [$record->file_id])),
+                        ->url(fn (Note $record) => $record->file_id ? FileResource::getUrl('view', [$record->file_id]) : null),
                     Infolists\Components\TextEntry::make('user.name')
                         ->color('warning')
                         ->url(fn (Note $record) => UserResource::getUrl('view', [$record->user_id])),

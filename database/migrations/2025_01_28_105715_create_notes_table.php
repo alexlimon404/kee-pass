@@ -14,8 +14,8 @@ return new class extends Migration {
             $table->foreignId('group_id')->constrained();
             $table->foreignId('file_id')->nullable()->constrained();
             $table->string('title');
-            $table->string('username');
-            $table->string('password');
+            $table->string('username')->nullable();
+            $table->string('password')->nullable();
             $table->string('url', 500)->nullable();
             $table->text('description')->nullable();
             $table->timestamp('last_edit_at')->nullable();

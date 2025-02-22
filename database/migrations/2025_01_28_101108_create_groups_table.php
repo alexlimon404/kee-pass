@@ -16,6 +16,8 @@ return new class extends Migration {
 
             $table->string('name');
             $table->string('breadcrumb')->nullable();
+
+            $table->unsignedInteger('children_count')->default(0);
         });
     }
 
