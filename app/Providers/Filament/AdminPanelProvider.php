@@ -50,6 +50,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->navigationGroups([
                 'Users',
+                'Articles',
             ])
             ->middleware([
                 EncryptCookies::class,
