@@ -63,6 +63,9 @@ class ArticleResource extends BaseResource
                         ->required(),
                     Forms\Components\TextInput::make('title')
                         ->required(),
+                    Forms\Components\Textarea::make('description')
+                        ->autosize()
+                        ->nullable(),
                     Forms\Components\RichEditor::make('content')
                         ->required(),
                 ]),
@@ -79,7 +82,8 @@ class ArticleResource extends BaseResource
             Tables\Columns\TextColumn::make('section.name')
                 ->color('primary')
                 ->url(fn (Article $record) => ArticleSectionResource::getUrl('view', [$record->section_id])),
-            Tables\Columns\TextColumn::make('title')
+            Tables\Columns\TextColumn::make('title'),
+            Tables\Columns\TextColumn::make('description')->limit(30),
         ];
     }
 
@@ -96,6 +100,7 @@ class ArticleResource extends BaseResource
                         ->color('primary')
                         ->url(fn (Article $record) => ArticleSectionResource::getUrl('view', [$record->section_id])),
                     Infolists\Components\TextEntry::make('title'),
+                    Infolists\Components\TextEntry::make('description'),
                 ]),
             Infolists\Components\Section::make()
                 ->columnSpan(2)

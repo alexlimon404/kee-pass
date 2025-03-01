@@ -10,7 +10,7 @@ class Article extends Model
 {
     protected $fillable = [
         'section_id',
-        'title', 'content',
+        'title', 'description', 'content',
     ];
 
     public function section(): BelongsTo

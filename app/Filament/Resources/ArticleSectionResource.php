@@ -67,6 +67,7 @@ class ArticleSectionResource extends BaseResource
             Tables\Columns\TextColumn::make('id')
                 ->sortable(),
             Tables\Columns\TextColumn::make('created_at')
+                ->toggleable(isToggledHiddenByDefault: true)
                 ->formatStateUsing(fn (Carbon $state, ArticleSection $record) => __date($state)),
             Tables\Columns\TextColumn::make('name')
                 ->searchable(),
