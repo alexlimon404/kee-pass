@@ -1,8 +1,8 @@
 #!/bin/sh
 
-git pull
+sudo -u www-data git pull
 
-composer install --no-dev --no-interaction --optimize-autoloader --prefer-dist
+sudo -u www-data composer install --no-dev --no-interaction --optimize-autoloader
 
 php artisan migrate --force
 

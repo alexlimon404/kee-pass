@@ -78,6 +78,7 @@ class ArticleResource extends BaseResource
             Tables\Columns\TextColumn::make('id')
                 ->sortable(),
             Tables\Columns\TextColumn::make('created_at')
+                ->toggleable(isToggledHiddenByDefault: true)
                 ->formatStateUsing(fn (Carbon $state, Article $record) => __date($state)),
             Tables\Columns\TextColumn::make('section.name')
                 ->color('primary')
@@ -100,7 +101,8 @@ class ArticleResource extends BaseResource
                         ->color('primary')
                         ->url(fn (Article $record) => ArticleSectionResource::getUrl('view', [$record->section_id])),
                     Infolists\Components\TextEntry::make('title'),
-                    Infolists\Components\TextEntry::make('description'),
+                    Infolists\Components\TextEntry::make('description')
+                        ->prose(),
                 ]),
             Infolists\Components\Section::make()
                 ->columnSpan(2)
