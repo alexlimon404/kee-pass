@@ -145,7 +145,8 @@ class NoteResource extends BaseResource
                 ]),
             Infolists\Components\Section::make()
                 ->schema([
-                    Infolists\Components\TextEntry::make('description'),
+                    Infolists\Components\TextEntry::make('description')
+                        ->prose(),
                     Infolists\Components\TextEntry::make('search'),
                 ]),
         ];
