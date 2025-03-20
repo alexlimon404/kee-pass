@@ -50,7 +50,8 @@ class ArticleCommentResource extends BaseResource
                 ->columnSpan(1)
                 ->columns(1)
                 ->schema([
-                    Forms\Components\TextInput::make('comment')
+                    Forms\Components\Textarea::make('comment')
+                        ->autosize()
                         ->required(),
                 ]),
         ];

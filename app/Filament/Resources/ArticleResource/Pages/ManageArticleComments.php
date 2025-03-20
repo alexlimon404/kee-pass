@@ -43,27 +43,17 @@ class ManageArticleComments extends ManageRelatedRecords
     {
         return $form
             ->schema([
-
-                Forms\Components\TextInput::make('comment')
+                Forms\Components\Textarea::make('comment')
                     ->required()
+                    ->autosize()
                     ->label('Content'),
             ])
             ->columns(1);
     }
 
-    public function infolist(Infolist $infolist): Infolist
-    {
-        return $infolist
-            ->columns(1)
-            ->schema([
-                TextEntry::make('comment'),
-            ]);
-    }
-
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('id')
             ->columns([
                 Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\TextColumn::make('comment')->limit(30),

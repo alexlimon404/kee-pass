@@ -12,7 +12,7 @@ return new class extends Migration {
             $table->timestamps();
 
             $table->foreignId('article_id')->constrained();
-            $table->string('comment');
+            $table->text('comment');
         });
     }
 
