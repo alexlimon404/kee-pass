@@ -14,6 +14,4 @@ php artisan event:cache
 
 php artisan view:clear
 
-php artisan permissions:create
-
 php artisan filament:optimize
