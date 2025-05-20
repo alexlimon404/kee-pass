@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\NoteResource\Pages;
+use App\Models\File;
 use App\Models\Note;
 use Carbon\Carbon;
 use Filament\Forms;
@@ -11,6 +12,7 @@ use Filament\Infolists\Infolist;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Infolists;
+use Illuminate\Database\Eloquent\Builder;
 
 class NoteResource extends BaseResource
 {
@@ -30,7 +32,8 @@ class NoteResource extends BaseResource
     public static function table(Table $table): Table
     {
         return $table->columns(static::getTableColumns($table))
-            ->actions([static::v(), static::e()]);
+            ->actions([static::v(), static::e()])
+            ->filters(static::getTableFilters($table));
     }
 
     public static function infolist(Infolist $infolist): Infolist
@@ -98,6 +101,10 @@ class NoteResource extends BaseResource
                 ->sortable(),
             Tables\Columns\TextColumn::make('created_at')
                 ->formatStateUsing(fn (Carbon $state, Note $record) => __date($state)),
+            Tables\Columns\TextColumn::make('file.name')
+                ->toggleable(isToggledHiddenByDefault: true)
+                ->color('primary')
+                ->url(fn (Note $record) => $record->file_id ? FileResource::getUrl('view', [$record->file_id]) : null),
             Tables\Columns\TextColumn::make('group.name')
                 ->color('primary')
                 ->url(fn (Note $record) => $record->group_id ? GroupResource::getUrl('view', [$record->group_id]) : null),
@@ -149,6 +156,20 @@ class NoteResource extends BaseResource
                         ->prose(),
                     Infolists\Components\TextEntry::make('search'),
                 ]),
+        ];
+    }
+
+    public static function getTableFilters(Table $table): array
+    {
+        return [
+            Tables\Filters\SelectFilter::make('File')
+                ->options(File::get()->pluck('name', 'id'))
+                ->query(function (Builder $query, array $data) {
+                    if ($data['value']) {
+                        return $query->where('file_id', $data['value']);
+                    }
+                    return $query;
+                }),
         ];
     }
 }
