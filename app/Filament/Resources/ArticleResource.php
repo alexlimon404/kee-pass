@@ -83,8 +83,8 @@ class ArticleResource extends BaseResource
             Tables\Columns\TextColumn::make('section.name')
                 ->color('primary')
                 ->url(fn (Article $record) => ArticleSectionResource::getUrl('view', [$record->section_id])),
-            Tables\Columns\TextColumn::make('title'),
-            Tables\Columns\TextColumn::make('description')->limit(30),
+            Tables\Columns\TextColumn::make('title')->limit(40)->searchable(),
+            Tables\Columns\TextColumn::make('description')->limit(30)->searchable(),
         ];
     }
 
