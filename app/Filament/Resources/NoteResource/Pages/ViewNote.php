@@ -14,6 +14,7 @@ class ViewNote extends ViewRecord
     {
         return [
             Actions\EditAction::make()->badge(),
+            Actions\DeleteAction::make()->badge(),
         ];
     }
 }
