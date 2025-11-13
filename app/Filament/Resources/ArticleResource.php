@@ -86,6 +86,7 @@ class ArticleResource extends BaseResource
             Tables\Columns\TextColumn::make('title')->limit(40)->searchable(),
             Tables\Columns\TextColumn::make('description')->limit(30)->searchable(),
             Tables\Columns\TextColumn::make('content')
+                ->toggleable(isToggledHiddenByDefault: true)
                 ->limit(30)
                 ->searchable(),
         ];
