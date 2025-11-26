@@ -16,9 +16,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class NoteResource extends BaseResource
 {
-    protected static ?int $navigationSort = 20;
-
-    protected static ?string $navigationGroup = 'Users';
+    protected static ?int $navigationSort = 10;
 
     protected static ?string $model = Note::class;
 

@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\FileResource\Pages;
-use App\Filament\Resources\FileResource\RelationManagers;
 use App\Models\File;
 use Carbon\Carbon;
 use Filament\Forms;
@@ -14,9 +13,9 @@ use Filament\Tables\Table;
 
 class FileResource extends BaseResource
 {
-    protected static ?int $navigationSort = 40;
+    protected static ?int $navigationSort = 30;
 
-    protected static ?string $navigationGroup = 'Users';
+    protected static ?string $navigationGroup = 'Settings';
 
     protected static ?string $model = File::class;
 

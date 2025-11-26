@@ -13,8 +13,8 @@ use Filament\Tables\Table;
 
 class ArticleCommentResource extends BaseResource
 {
-    protected static ?int $navigationSort = 30;
-    protected static ?string $navigationGroup = 'Articles';
+    protected static ?int $navigationSort = 40;
+    protected static ?string $navigationGroup = 'Settings';
     protected static ?string $model = ArticleComment::class;
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 

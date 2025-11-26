@@ -11,12 +11,11 @@ use Filament\Forms\Form;
 use Filament\Infolists\Infolist;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Infolists;
 
 class ArticleSectionResource extends BaseResource
 {
-    protected static ?int $navigationSort = 20;
-    protected static ?string $navigationGroup = 'Articles';
+    protected static ?int $navigationSort = 50;
+    protected static ?string $navigationGroup = 'Settings';
     protected static ?string $model = ArticleSection::class;
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 

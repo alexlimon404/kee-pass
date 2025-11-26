@@ -25,7 +25,9 @@ class AdminPanelProvider extends PanelProvider
     {
         Table::configureUsing(static function (Table $table): void {
             $table->defaultPaginationPageOption(10);
+            $table->paginationPageOptions([10, 15, 25, 50, 'all']);
             $table->defaultSort('id', 'desc');
+            $table->deferFilters(false);
         });
     }
 
@@ -33,6 +35,7 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
+            ->topNavigation()
             ->id('admin')
             ->path('admin')
             ->login()
@@ -49,8 +52,7 @@ class AdminPanelProvider extends PanelProvider
                 Widgets\AccountWidget::class,
             ])
             ->navigationGroups([
-                'Users',
-                'Articles',
+                'Settings',
             ])
             ->middleware([
                 EncryptCookies::class,

@@ -15,9 +15,9 @@ use Filament\Infolists;
 
 class GroupResource extends BaseResource
 {
-    protected static ?int $navigationSort = 30;
+    protected static ?int $navigationSort = 20;
 
-    protected static ?string $navigationGroup = 'Users';
+    protected static ?string $navigationGroup = 'Settings';
 
     protected static ?string $model = Group::class;
 

@@ -16,8 +16,7 @@ use Filament\Infolists;
 
 class ArticleResource extends BaseResource
 {
-    protected static ?int $navigationSort = 10;
-    protected static ?string $navigationGroup = 'Articles';
+    protected static ?int $navigationSort = 20;
     protected static ?string $model = Article::class;
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
