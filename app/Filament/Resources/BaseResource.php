@@ -2,24 +2,25 @@
 
 namespace App\Filament\Resources;
 
-use Filament\Forms\Form;
-use Filament\Infolists\Infolist;
+use Filament\Schemas\Schema;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\IconSize;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
-use Filament\Tables;
 
 // https://heroicons.com/
 abstract class BaseResource extends Resource
 {
     const cache_minutes_for_nav = 3;
 
-    abstract public static function getFormSchema(Form $form): array;
+    abstract public static function getFormSchema(Schema $schema): array;
 
     abstract public static function getTableColumns(Table $table): array;
 
-    abstract public static function getInfoList(Infolist $infolist): array;
+    abstract public static function getInfoList(Schema $schema): array;
 
     public static function getNavigationLabel(): string
     {
@@ -31,19 +32,19 @@ abstract class BaseResource extends Resource
         return Str::of(parent::getBreadcrumb())->lower()->ucfirst();
     }
 
-    public static function v(): Tables\Actions\ViewAction
+    public static function v(): ViewAction
     {
-        return Tables\Actions\ViewAction::make()->iconButton()->iconSize(IconSize::Small)
+        return ViewAction::make()->iconButton()->iconSize(IconSize::Small)
             ->color('success');
     }
 
-    public static function e(): Tables\Actions\EditAction
+    public static function e(): EditAction
     {
-        return Tables\Actions\EditAction::make()->iconButton()->iconSize(IconSize::Small);
+        return EditAction::make()->iconButton()->iconSize(IconSize::Small);
     }
 
-    public static function d(): Tables\Actions\DeleteAction
+    public static function d(): DeleteAction
     {
-        return Tables\Actions\DeleteAction::make()->iconButton()->iconSize(IconSize::Small);
+        return DeleteAction::make()->iconButton()->iconSize(IconSize::Small);
     }
 }

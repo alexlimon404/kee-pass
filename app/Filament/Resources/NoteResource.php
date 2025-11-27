@@ -2,16 +2,22 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\NoteResource\Pages;
+use Filament\Schemas\Schema;
+use App\Filament\Resources\NoteResource\Pages\ListNotes;
+use App\Filament\Resources\NoteResource\Pages\CreateNote;
+use App\Filament\Resources\NoteResource\Pages\ViewNote;
+use App\Filament\Resources\NoteResource\Pages\EditNote;
+use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Tables\Filters\SelectFilter;
 use App\Models\File;
 use App\Models\Note;
 use Carbon\Carbon;
-use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Infolists\Infolist;
-use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Infolists;
 use Illuminate\Database\Eloquent\Builder;
 
 class NoteResource extends BaseResource
@@ -20,72 +26,72 @@ class NoteResource extends BaseResource
 
     protected static ?string $model = Note::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form->schema(static::getFormSchema($form));
+        return $schema->components(static::getFormSchema($schema));
     }
 
     public static function table(Table $table): Table
     {
         return $table->columns(static::getTableColumns($table))
-            ->actions([static::v(), static::e()])
+            ->recordActions([static::v(), static::e()])
             ->filters(static::getTableFilters($table));
     }
 
-    public static function infolist(Infolist $infolist): Infolist
+    public static function infolist(Schema $schema): Schema
     {
-        return $infolist->schema(static::getInfoList($infolist));
+        return $schema->components(static::getInfoList($schema));
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListNotes::route('/'),
-            'create' => Pages\CreateNote::route('/create'),
-            'view' => Pages\ViewNote::route('/{record}'),
-            'edit' => Pages\EditNote::route('/{record}/edit'),
+            'index' => ListNotes::route('/'),
+            'create' => CreateNote::route('/create'),
+            'view' => ViewNote::route('/{record}'),
+            'edit' => EditNote::route('/{record}/edit'),
         ];
     }
 
-    public static function getFormSchema(Form $form): array
+    public static function getFormSchema(Schema $schema): array
     {
         return [
-            Forms\Components\Section::make()->inlineLabel()
+            Section::make()->inlineLabel()
                 ->columnSpan(1)
                 ->columns(1)
                 ->schema([
-                    Forms\Components\Select::make('group_id')
+                    Select::make('group_id')
                         ->relationship('group', 'breadcrumb')
                         ->preload()
                         ->searchable()
                         ->required(),
-                    Forms\Components\TextInput::make('file_id')
+                    TextInput::make('file_id')
                         ->nullable(),
-                    Forms\Components\Select::make('user_id')
+                    Select::make('user_id')
                         ->relationship('user', 'name')
                         ->default(auth()->user()->getAuthIdentifier())
                         ->required(),
                 ]),
-            Forms\Components\Section::make()->inlineLabel()
+            Section::make()->inlineLabel()
                 ->columnSpan(1)
                 ->columns(1)
                 ->schema([
-                    Forms\Components\TextInput::make('title')
+                    TextInput::make('title')
                         ->required(),
-                    Forms\Components\TextInput::make('username')
+                    TextInput::make('username')
                         ->nullable(),
-                    Forms\Components\TextInput::make('password')
+                    TextInput::make('password')
                         ->nullable(),
-                    Forms\Components\TextInput::make('url')
+                    TextInput::make('url')
                         ->nullable(),
                 ]),
-            Forms\Components\Section::make()
+            Section::make()
                 ->columnSpan(2)
                 ->columns(1)
                 ->schema([
-                    Forms\Components\Textarea::make('description')
+                    Textarea::make('description')
                         ->autosize()
                         ->nullable(),
                 ]),
@@ -95,64 +101,64 @@ class NoteResource extends BaseResource
     public static function getTableColumns(Table $table): array
     {
         return [
-            Tables\Columns\TextColumn::make('id')
+            TextColumn::make('id')
                 ->sortable(),
-            Tables\Columns\TextColumn::make('created_at')
+            TextColumn::make('created_at')
                 ->formatStateUsing(fn (Carbon $state, Note $record) => __date($state)),
-            Tables\Columns\TextColumn::make('file.name')
+            TextColumn::make('file.name')
                 ->toggleable(isToggledHiddenByDefault: true)
                 ->color('primary')
                 ->url(fn (Note $record) => $record->file_id ? FileResource::getUrl('view', [$record->file_id]) : null),
-            Tables\Columns\TextColumn::make('group.name')
+            TextColumn::make('group.name')
                 ->color('primary')
                 ->url(fn (Note $record) => $record->group_id ? GroupResource::getUrl('view', [$record->group_id]) : null),
-            Tables\Columns\TextColumn::make('title'),
-            Tables\Columns\TextColumn::make('username'),
-            Tables\Columns\TextColumn::make('url')
+            TextColumn::make('title'),
+            TextColumn::make('username'),
+            TextColumn::make('url')
                 ->searchable(),
-            Tables\Columns\TextColumn::make('search')
+            TextColumn::make('search')
                 ->searchable()
                 ->limit(1),
         ];
     }
 
-    public static function getInfoList(Infolist $infolist): array
+    public static function getInfoList(Schema $schema): array
     {
         return [
-            Infolists\Components\Section::make()->inlineLabel()
+            Section::make()->inlineLabel()
                 ->columnSpan(1)
                 ->schema([
-                    Infolists\Components\TextEntry::make('id'),
-                    Infolists\Components\TextEntry::make('created_at')
+                    TextEntry::make('id'),
+                    TextEntry::make('created_at')
                         ->formatStateUsing(fn (Carbon $state, Note $record) => __date($state)),
-                    Infolists\Components\TextEntry::make('group.name')
+                    TextEntry::make('group.name')
                         ->color('primary')
                         ->url(fn (Note $record) => $record->group_id ? GroupResource::getUrl('view', [$record->group_id]) : null),
-                    Infolists\Components\TextEntry::make('file.name')
+                    TextEntry::make('file.name')
                         ->color('warning')
                         ->url(fn (Note $record) => $record->file_id ? FileResource::getUrl('view', [$record->file_id]) : null),
-                    Infolists\Components\TextEntry::make('user.name')
+                    TextEntry::make('user.name')
                         ->color('warning')
                         ->url(fn (Note $record) => UserResource::getUrl('view', [$record->user_id])),
                 ]),
 
-            Infolists\Components\Section::make()->inlineLabel()
+            Section::make()->inlineLabel()
                 ->columnSpan(1)
                 ->schema([
-                    Infolists\Components\TextEntry::make('title'),
-                    Infolists\Components\TextEntry::make('username')->copyable(),
-                    Infolists\Components\TextEntry::make('password')->copyable(),
-                    Infolists\Components\TextEntry::make('url')->copyable(),
-                    Infolists\Components\TextEntry::make('last_edit_at')
+                    TextEntry::make('title'),
+                    TextEntry::make('username')->copyable(),
+                    TextEntry::make('password')->copyable(),
+                    TextEntry::make('url')->copyable(),
+                    TextEntry::make('last_edit_at')
                         ->formatStateUsing(fn (Carbon $state, Note $record) => __date($state)),
-                    Infolists\Components\TextEntry::make('created_at_from_export')
+                    TextEntry::make('created_at_from_export')
                         ->formatStateUsing(fn (Carbon $state, Note $record) => __date($state)),
                 ]),
-            Infolists\Components\Section::make()
+            Section::make()
                 ->schema([
-                    Infolists\Components\TextEntry::make('description')
+                    TextEntry::make('description')
                         ->prose(),
-                    Infolists\Components\TextEntry::make('search'),
+                    TextEntry::make('search'),
                 ]),
         ];
     }
@@ -160,7 +166,7 @@ class NoteResource extends BaseResource
     public static function getTableFilters(Table $table): array
     {
         return [
-            Tables\Filters\SelectFilter::make('File')
+            SelectFilter::make('File')
                 ->options(File::get()->pluck('name', 'id'))
                 ->query(function (Builder $query, array $data) {
                     if ($data['value']) {

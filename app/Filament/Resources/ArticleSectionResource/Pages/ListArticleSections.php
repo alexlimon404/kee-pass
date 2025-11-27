@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\ArticleSectionResource\Pages;
 
+use Filament\Actions\CreateAction;
 use App\Filament\Resources\ArticleSectionResource;
-use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
 class ListArticleSections extends ListRecords
@@ -13,7 +13,7 @@ class ListArticleSections extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make()->badge(),
+            CreateAction::make()->badge(),
         ];
     }
 }

@@ -2,55 +2,48 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\RelationManagers;
+use Filament\Schemas\Schema;
+use App\Filament\Resources\UserResource\Pages\ListUsers;
+use App\Filament\Resources\UserResource\Pages\ViewUser;
+use App\Filament\Resources\UserResource\Pages\EditUser;
+use Filament\Tables\Columns\TextColumn;
 use App\Models\User;
 use Carbon\Carbon;
-use Filament\Forms\Form;
-use Filament\Infolists\Infolist;
-use Filament\Tables;
 use Filament\Tables\Table;
 
 class UserResource extends BaseResource
 {
     protected static ?int $navigationSort = 10;
 
-    protected static ?string $navigationGroup = 'Settings';
+    protected static string|\UnitEnum|null $navigationGroup = 'Settings';
 
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-user';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-user';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form->schema(static::getFormSchema($form))->inlineLabel();
+        return $schema->components(static::getFormSchema($schema))->inlineLabel();
     }
 
     public static function table(Table $table): Table
     {
         return $table->columns(static::getTableColumns($table))
-            ->actions([
+            ->recordActions([
                 static::v(), static::e(),
             ])->filtersFormMaxHeight('600px');
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListUsers::route('/'),
-            'view' => Pages\ViewUser::route('/{record}'),
-            'edit' => Pages\EditUser::route('/{record}/edit'),
+            'index' => ListUsers::route('/'),
+            'view' => ViewUser::route('/{record}'),
+            'edit' => EditUser::route('/{record}/edit'),
         ];
     }
 
-    public static function getFormSchema(Form $form): array
+    public static function getFormSchema(Schema $schema): array
     {
         return [];
     }
@@ -58,18 +51,18 @@ class UserResource extends BaseResource
     public static function getTableColumns(Table $table): array
     {
         return [
-            Tables\Columns\TextColumn::make('id')
+            TextColumn::make('id')
                 ->sortable(),
-            Tables\Columns\TextColumn::make('created_at')
+            TextColumn::make('created_at')
                 ->formatStateUsing(fn (Carbon $state, User $record) => __date($state)),
-            Tables\Columns\TextColumn::make('name')
+            TextColumn::make('name')
                 ->searchable(),
-            Tables\Columns\TextColumn::make('email')
+            TextColumn::make('email')
                 ->searchable(),
         ];
     }
 
-    public static function getInfoList(Infolist $infolist): array
+    public static function getInfoList(Schema $schema): array
     {
         return [];
     }

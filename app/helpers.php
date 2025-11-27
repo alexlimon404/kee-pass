@@ -49,7 +49,7 @@ if (! function_exists('filament_model_resource')) {
      */
     function filament_model_resource(Model $model): ?string
     {
-        return Filament::getCurrentPanel()?->getModelResource($model);
+        return Filament::getCurrentOrDefaultPanel()?->getModelResource($model);
     }
 }
 

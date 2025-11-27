@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\GroupResource\Pages;
 
-use Filament\Actions;
+use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 use App\Filament\Resources\GroupResource;
 
@@ -13,7 +13,7 @@ class ViewGroup extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\EditAction::make()->badge(),
+            EditAction::make()->badge(),
         ];
     }
 }

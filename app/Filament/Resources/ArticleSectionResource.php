@@ -2,59 +2,62 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\ArticleSectionResource\Pages;
-use App\Filament\Resources\ArticleSectionResource\RelationManagers;
+use Filament\Schemas\Schema;
+use App\Filament\Resources\ArticleSectionResource\RelationManagers\ArticlesRelationManager;
+use App\Filament\Resources\ArticleSectionResource\Pages\ListArticleSections;
+use App\Filament\Resources\ArticleSectionResource\Pages\CreateArticleSection;
+use App\Filament\Resources\ArticleSectionResource\Pages\EditArticleSection;
+use App\Filament\Resources\ArticleSectionResource\Pages\ViewArticleSection;
+use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
 use App\Models\ArticleSection;
 use Carbon\Carbon;
-use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Infolists\Infolist;
-use Filament\Tables;
 use Filament\Tables\Table;
 
 class ArticleSectionResource extends BaseResource
 {
     protected static ?int $navigationSort = 50;
-    protected static ?string $navigationGroup = 'Settings';
+    protected static string|\UnitEnum|null $navigationGroup = 'Settings';
     protected static ?string $model = ArticleSection::class;
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form->schema(static::getFormSchema($form));
+        return $schema->components(static::getFormSchema($schema));
     }
 
     public static function table(Table $table): Table
     {
         return $table->columns(static::getTableColumns($table))
-            ->actions([static::v(), static::e()]);
+            ->recordActions([static::v(), static::e()]);
     }
 
     public static function getRelations(): array
     {
         return [
-            RelationManagers\ArticlesRelationManager::class,
+            ArticlesRelationManager::class,
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListArticleSections::route('/'),
-            'create' => Pages\CreateArticleSection::route('/create'),
-            'edit' => Pages\EditArticleSection::route('/{record}/edit'),
-            'view' => Pages\ViewArticleSection::route('/{record}'),
+            'index' => ListArticleSections::route('/'),
+            'create' => CreateArticleSection::route('/create'),
+            'edit' => EditArticleSection::route('/{record}/edit'),
+            'view' => ViewArticleSection::route('/{record}'),
         ];
     }
 
-    public static function getFormSchema(Form $form): array
+    public static function getFormSchema(Schema $schema): array
     {
         return [
-            Forms\Components\Section::make()->inlineLabel()
+            Section::make()->inlineLabel()
                 ->columnSpan(1)
                 ->columns(1)
                 ->schema([
-                    Forms\Components\TextInput::make('name')
+                    TextInput::make('name')
                         ->required(),
                 ]),
         ];
@@ -63,17 +66,17 @@ class ArticleSectionResource extends BaseResource
     public static function getTableColumns(Table $table): array
     {
         return [
-            Tables\Columns\TextColumn::make('id')
+            TextColumn::make('id')
                 ->sortable(),
-            Tables\Columns\TextColumn::make('created_at')
+            TextColumn::make('created_at')
                 ->toggleable(isToggledHiddenByDefault: true)
                 ->formatStateUsing(fn (Carbon $state, ArticleSection $record) => __date($state)),
-            Tables\Columns\TextColumn::make('name')
+            TextColumn::make('name')
                 ->searchable(),
         ];
     }
 
-    public static function getInfoList(Infolist $infolist): array
+    public static function getInfoList(Schema $schema): array
     {
         return [];
     }

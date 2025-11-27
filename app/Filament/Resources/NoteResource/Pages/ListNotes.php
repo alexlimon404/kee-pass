@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\NoteResource\Pages;
 
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use App\Filament\Resources\NoteResource;
 use Filament\Resources\Pages\ListRecords;
 
@@ -13,7 +13,7 @@ class ListNotes extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make()->badge(),
+            CreateAction::make()->badge(),
         ];
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\GroupResource\Pages;
 
-use Filament\Actions;
+use Filament\Actions\ViewAction;
 use App\Filament\Resources\GroupResource;
 use Filament\Resources\Pages\EditRecord;
 
@@ -13,7 +13,7 @@ class EditGroup extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\ViewAction::make()->badge()->color('success'),
+            ViewAction::make()->badge()->color('success'),
         ];
     }
 }

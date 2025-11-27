@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\ArticleCommentResource\Pages;
 
+use Filament\Actions\DeleteAction;
 use App\Filament\Resources\ArticleCommentResource;
-use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
 class EditArticleComment extends EditRecord
@@ -13,7 +13,7 @@ class EditArticleComment extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make()->badge(),
+            DeleteAction::make()->badge(),
         ];
     }
 }

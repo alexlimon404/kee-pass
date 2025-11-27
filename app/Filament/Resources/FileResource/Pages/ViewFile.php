@@ -2,7 +2,8 @@
 
 namespace App\Filament\Resources\FileResource\Pages;
 
-use Filament\Actions;
+use App\Filament\Resources\FileResource\Actions\ImportCSVFilamentAction;
+use Filament\Actions\EditAction;
 use App\Filament\Resources\FileResource;
 use Filament\Resources\Pages\ViewRecord;
 
@@ -13,8 +14,8 @@ class ViewFile extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            FileResource\Actions\ImportCSVFilamentAction::make()->badge()->color('success'),
-            Actions\EditAction::make()->badge(),
+            ImportCSVFilamentAction::make()->badge()->color('success'),
+            EditAction::make()->badge(),
         ];
     }
 }

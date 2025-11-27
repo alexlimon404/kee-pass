@@ -2,13 +2,15 @@
 
 namespace App\Filament\Resources\ArticleResource\Pages;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\CreateAction;
 use App\Filament\Resources\ArticleResource;
-use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ManageRelatedRecords;
-use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
 
@@ -18,7 +20,7 @@ class ManageArticleComments extends ManageRelatedRecords
 
     protected static string $relationship = 'comments';
 
-    protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left-ellipsis';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-chat-bubble-left-ellipsis';
 
     public function getTitle(): string|Htmlable
     {
@@ -39,11 +41,11 @@ class ManageArticleComments extends ManageRelatedRecords
         return 'Manage Comments';
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Textarea::make('comment')
+        return $schema
+            ->components([
+                Textarea::make('comment')
                     ->required()
                     ->autosize()
                     ->label('Content'),
@@ -55,16 +57,16 @@ class ManageArticleComments extends ManageRelatedRecords
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id'),
-                Tables\Columns\TextColumn::make('comment')->limit(30),
+                TextColumn::make('id'),
+                TextColumn::make('comment')->limit(30),
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make()->label(''),
-                Tables\Actions\EditAction::make()->label(''),
-                Tables\Actions\DeleteAction::make()->label(''),
+            ->recordActions([
+                ViewAction::make()->label(''),
+                EditAction::make()->label(''),
+                DeleteAction::make()->label(''),
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()->badge(),
+                CreateAction::make()->badge(),
             ]);
     }
 }

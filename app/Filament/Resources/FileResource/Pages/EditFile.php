@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\FileResource\Pages;
 
-use Filament\Actions;
+use Filament\Actions\ViewAction;
 use App\Filament\Resources\FileResource;
 use Filament\Resources\Pages\EditRecord;
 
@@ -13,7 +13,7 @@ class EditFile extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\ViewAction::make()->badge()->color('success'),
+            ViewAction::make()->badge()->color('success'),
         ];
     }
 }

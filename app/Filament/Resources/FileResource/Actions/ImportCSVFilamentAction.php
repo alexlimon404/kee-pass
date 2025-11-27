@@ -30,7 +30,7 @@ class ImportCSVFilamentAction extends Action
 
         $this->icon('heroicon-m-currency-dollar');
 
-        $this->form([
+        $this->schema([
             FileUpload::make('attachment'),
         ]);
 

@@ -2,70 +2,77 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\ArticleResource\Pages;
+use Filament\Pages\Enums\SubNavigationPosition;
+use Filament\Schemas\Schema;
+use App\Filament\Resources\ArticleResource\Pages\ListArticles;
+use App\Filament\Resources\ArticleResource\Pages\CreateArticle;
+use App\Filament\Resources\ArticleResource\Pages\ViewArticle;
+use App\Filament\Resources\ArticleResource\Pages\EditArticle;
+use App\Filament\Resources\ArticleResource\Pages\ManageArticleComments;
+use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\RichEditor;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Infolists\Components\TextEntry;
 use App\Models\Article;
 use Carbon\Carbon;
-use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Infolists\Infolist;
-use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Pages\Page;
-use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Infolists;
 
 class ArticleResource extends BaseResource
 {
     protected static ?int $navigationSort = 20;
     protected static ?string $model = Article::class;
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?\Filament\Pages\Enums\SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form->schema(static::getFormSchema($form));
+        return $schema->components(static::getFormSchema($schema));
     }
 
     public static function table(Table $table): Table
     {
         return $table->columns(static::getTableColumns($table))
-            ->actions([static::v(), static::e()]);
+            ->recordActions([static::v(), static::e()]);
     }
 
-    public static function infolist(Infolist $infolist): Infolist
+    public static function infolist(Schema $schema): Schema
     {
-        return $infolist->schema(static::getInfoList($infolist));
+        return $schema->components(static::getInfoList($schema));
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListArticles::route('/'),
-            'create' => Pages\CreateArticle::route('/create'),
-            'view' => Pages\ViewArticle::route('/{record}'),
-            'edit' => Pages\EditArticle::route('/{record}/edit'),
-            'comments' => Pages\ManageArticleComments::route('/{record}/comments'),
+            'index' => ListArticles::route('/'),
+            'create' => CreateArticle::route('/create'),
+            'view' => ViewArticle::route('/{record}'),
+            'edit' => EditArticle::route('/{record}/edit'),
+            'comments' => ManageArticleComments::route('/{record}/comments'),
         ];
     }
 
-    public static function getFormSchema(Form $form): array
+    public static function getFormSchema(Schema $schema): array
     {
         return [
-            Forms\Components\Section::make()->inlineLabel()
+            Section::make()->inlineLabel()
                 ->columnSpan(2)
                 ->columns(1)
                 ->schema([
-                    Forms\Components\Select::make('section_id')
+                    Select::make('section_id')
                         ->relationship('section', 'name')
                         ->preload()
                         ->searchable()
                         ->required(),
-                    Forms\Components\TextInput::make('title')
+                    TextInput::make('title')
                         ->required(),
-                    Forms\Components\Textarea::make('description')
+                    Textarea::make('description')
                         ->autosize()
                         ->nullable(),
-                    Forms\Components\RichEditor::make('content')
+                    RichEditor::make('content')
                         ->required(),
                 ]),
         ];
@@ -74,43 +81,43 @@ class ArticleResource extends BaseResource
     public static function getTableColumns(Table $table): array
     {
         return [
-            Tables\Columns\TextColumn::make('id')
+            TextColumn::make('id')
                 ->sortable(),
-            Tables\Columns\TextColumn::make('created_at')
+            TextColumn::make('created_at')
                 ->toggleable(isToggledHiddenByDefault: true)
                 ->formatStateUsing(fn (Carbon $state, Article $record) => __date($state)),
-            Tables\Columns\TextColumn::make('section.name')
+            TextColumn::make('section.name')
                 ->color('primary')
                 ->url(fn (Article $record) => ArticleSectionResource::getUrl('view', [$record->section_id])),
-            Tables\Columns\TextColumn::make('title')->limit(40)->searchable(),
-            Tables\Columns\TextColumn::make('description')->limit(30)->searchable(),
-            Tables\Columns\TextColumn::make('content')
+            TextColumn::make('title')->limit(40)->searchable(),
+            TextColumn::make('description')->limit(30)->searchable(),
+            TextColumn::make('content')
                 ->toggleable(isToggledHiddenByDefault: true)
                 ->limit(30)
                 ->searchable(),
         ];
     }
 
-    public static function getInfoList(Infolist $infolist): array
+    public static function getInfoList(Schema $schema): array
     {
         return [
-            Infolists\Components\Section::make()->inlineLabel()
+            Section::make()->inlineLabel()
                 ->columnSpan(2)
                 ->schema([
-                    Infolists\Components\TextEntry::make('id'),
-                    Infolists\Components\TextEntry::make('created_at')
+                    TextEntry::make('id'),
+                    TextEntry::make('created_at')
                         ->formatStateUsing(fn (Carbon $state, Article $record) => __date($state)),
-                    Infolists\Components\TextEntry::make('section.name')
+                    TextEntry::make('section.name')
                         ->color('primary')
                         ->url(fn (Article $record) => ArticleSectionResource::getUrl('view', [$record->section_id])),
-                    Infolists\Components\TextEntry::make('title'),
-                    Infolists\Components\TextEntry::make('description')
+                    TextEntry::make('title'),
+                    TextEntry::make('description')
                         ->prose(),
                 ]),
-            Infolists\Components\Section::make()
+            Section::make()
                 ->columnSpan(2)
                 ->schema([
-                    Infolists\Components\TextEntry::make('content')
+                    TextEntry::make('content')
                         ->prose(),
                 ]),
         ];
@@ -119,9 +126,9 @@ class ArticleResource extends BaseResource
     public static function getRecordSubNavigation(Page $page): array
     {
         return $page->generateNavigationItems([
-            Pages\ViewArticle::class,
-            Pages\EditArticle::class,
-            Pages\ManageArticleComments::class,
+            ViewArticle::class,
+            EditArticle::class,
+            ManageArticleComments::class,
         ]);
     }
 }

@@ -2,8 +2,9 @@
 
 namespace App\Filament\Resources\NoteResource\Pages;
 
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
 use App\Filament\Resources\NoteResource;
-use Filament\Actions;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewNote extends ViewRecord
@@ -13,8 +14,8 @@ class ViewNote extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\EditAction::make()->badge(),
-            Actions\DeleteAction::make()->badge(),
+            EditAction::make()->badge(),
+            DeleteAction::make()->badge(),
         ];
     }
 }

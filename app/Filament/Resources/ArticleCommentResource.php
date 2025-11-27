@@ -2,55 +2,57 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\ArticleCommentResource\Pages;
+use Filament\Schemas\Schema;
+use App\Filament\Resources\ArticleCommentResource\Pages\ListArticleComments;
+use App\Filament\Resources\ArticleCommentResource\Pages\CreateArticleComment;
+use App\Filament\Resources\ArticleCommentResource\Pages\EditArticleComment;
+use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\TextColumn;
 use App\Models\ArticleComment;
 use Carbon\Carbon;
-use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Infolists\Infolist;
-use Filament\Tables;
 use Filament\Tables\Table;
 
 class ArticleCommentResource extends BaseResource
 {
     protected static ?int $navigationSort = 40;
-    protected static ?string $navigationGroup = 'Settings';
+    protected static string|\UnitEnum|null $navigationGroup = 'Settings';
     protected static ?string $model = ArticleComment::class;
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form->schema(static::getFormSchema($form));
+        return $schema->components(static::getFormSchema($schema));
     }
 
     public static function table(Table $table): Table
     {
         return $table->columns(static::getTableColumns($table))
-            ->actions([static::v(), static::e()]);
+            ->recordActions([static::v(), static::e()]);
     }
 
-    public static function infolist(Infolist $infolist): Infolist
+    public static function infolist(Schema $schema): Schema
     {
-        return $infolist->schema(static::getInfoList($infolist));
+        return $schema->components(static::getInfoList($schema));
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListArticleComments::route('/'),
-            'create' => Pages\CreateArticleComment::route('/create'),
-            'edit' => Pages\EditArticleComment::route('/{record}/edit'),
+            'index' => ListArticleComments::route('/'),
+            'create' => CreateArticleComment::route('/create'),
+            'edit' => EditArticleComment::route('/{record}/edit'),
         ];
     }
 
-    public static function getFormSchema(Form $form): array
+    public static function getFormSchema(Schema $schema): array
     {
         return [
-            Forms\Components\Section::make()->inlineLabel()
+            Section::make()->inlineLabel()
                 ->columnSpan(1)
                 ->columns(1)
                 ->schema([
-                    Forms\Components\Textarea::make('comment')
+                    Textarea::make('comment')
                         ->autosize()
                         ->required(),
                 ]),
@@ -60,20 +62,20 @@ class ArticleCommentResource extends BaseResource
     public static function getTableColumns(Table $table): array
     {
         return [
-            Tables\Columns\TextColumn::make('id')
+            TextColumn::make('id')
                 ->sortable(),
-            Tables\Columns\TextColumn::make('created_at')
+            TextColumn::make('created_at')
                 ->formatStateUsing(fn (Carbon $state, ArticleComment $record) => __date($state)),
-            Tables\Columns\TextColumn::make('article.title')->limit(30)
+            TextColumn::make('article.title')->limit(30)
                 ->color('warning')
                 ->url(fn (ArticleComment $record) => ArticleResource::getUrl('view', [$record->article_id]))
                 ->searchable(),
-            Tables\Columns\TextColumn::make('comment')
+            TextColumn::make('comment')
                 ->searchable(),
         ];
     }
 
-    public static function getInfoList(Infolist $infolist): array
+    public static function getInfoList(Schema $schema): array
     {
         return [];
     }
