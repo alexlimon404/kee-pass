@@ -8,10 +8,6 @@ php artisan migrate --force
 
 php artisan install
 
-php artisan config:cache
-
-php artisan event:cache
-
 php artisan view:clear
 
-php artisan filament:optimize
+php artisan optimize

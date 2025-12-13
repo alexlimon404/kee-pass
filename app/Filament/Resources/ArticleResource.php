@@ -58,9 +58,9 @@ class ArticleResource extends BaseResource
     public static function getFormSchema(Schema $schema): array
     {
         return [
-            Section::make()->inlineLabel()
+            Section::make()
+                ->inlineLabel()
                 ->columnSpan(2)
-                ->columns(1)
                 ->schema([
                     Select::make('section_id')
                         ->relationship('section', 'name')
@@ -72,6 +72,10 @@ class ArticleResource extends BaseResource
                     Textarea::make('description')
                         ->autosize()
                         ->nullable(),
+                ]),
+            Section::make()
+                ->columnSpan(2)
+                ->schema([
                     RichEditor::make('content')
                         ->required(),
                 ]),
