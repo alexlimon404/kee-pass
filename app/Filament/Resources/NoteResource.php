@@ -156,8 +156,7 @@ class NoteResource extends BaseResource
                 ]),
             Section::make()
                 ->schema([
-                    TextEntry::make('description')
-                        ->prose(),
+                    TextEntry::make('description'),
                     TextEntry::make('search'),
                 ]),
         ];

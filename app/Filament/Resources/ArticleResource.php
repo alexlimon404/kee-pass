@@ -115,14 +115,12 @@ class ArticleResource extends BaseResource
                         ->color('primary')
                         ->url(fn (Article $record) => ArticleSectionResource::getUrl('view', [$record->section_id])),
                     TextEntry::make('title'),
-                    TextEntry::make('description')
-                        ->prose(),
+                    TextEntry::make('description'),
                 ]),
             Section::make()
                 ->columnSpan(2)
                 ->schema([
-                    TextEntry::make('content')
-                        ->prose(),
+                    TextEntry::make('content'),
                 ]),
         ];
     }
