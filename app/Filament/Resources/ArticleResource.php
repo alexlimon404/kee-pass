@@ -120,7 +120,9 @@ class ArticleResource extends BaseResource
             Section::make()
                 ->columnSpan(2)
                 ->schema([
-                    TextEntry::make('content'),
+                    TextEntry::make('content')
+                        ->html()
+                        ->prose(),
                 ]),
         ];
     }
